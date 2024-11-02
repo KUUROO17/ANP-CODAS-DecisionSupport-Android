@@ -1,0 +1,299 @@
+import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'PerbandinganAlternatifPage.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DataPenilaianPage(),
+    );
+  }
+}
+
+class DataPenilaianPage extends StatefulWidget {
+  @override
+  _DataPenilaianPageState createState() => _DataPenilaianPageState();
+}
+
+class _DataPenilaianPageState extends State<DataPenilaianPage> {
+  List<dynamic> data = [];
+  List<String> kriteriaList = [];
+  List<KriteriaData> kriteriaValueList = [
+    KriteriaData(value: 1.0, text: "sama penting"),
+    KriteriaData(value: 2.0, text: "Mendekati sedikit lebih penting"),
+    KriteriaData(value: 3.0, text: "Sedikit Lebih Penting"),
+    KriteriaData(value: 4.0, text: "Mendekati Lebih Penting"),
+    KriteriaData(value: 5.0, text: "Lebih Penting"),
+  ];
+  KriteriaData? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('user_id');
+    final response =
+        await http.get(Uri.parse('http://192.168.214.65:5000/penilaian/$userId'));
+    print(response.body);
+    if (response.statusCode == 200) {
+      data.clear();
+      final responseData = json.decode(response.body)['data'];
+      final Map<String, dynamic> uniqueValuesMap = {};
+      for (var item in responseData) {
+        final key = '${item['id_alternatif']}_${item['id_kriteria']}';
+        uniqueValuesMap[key] = item;
+      }
+      uniqueValuesMap.values.forEach((value) {
+        data.add(value);
+      });
+      data.sort((a, b) => a['id_alternatif'].compareTo(b['id_alternatif']));
+
+      for (var item in responseData) {
+        final kriteria = item['id_kriteria'];
+        if (!kriteriaList.contains(kriteria)) {
+          kriteriaList.add(kriteria);
+        }
+      }
+
+      setState(() {});
+    } else {
+      print('Gagal memuat data dari API');
+    }
+  }
+
+  bool isDataExist() {
+    return data.isNotEmpty;
+  }
+
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Data Already Exists'),
+        content: Text('You have existing data. To add new data, you need to delete the existing data.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              deleteAllData(); // Call the function to delete the data
+            },
+            child: Text('Delete Data'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void deleteAllData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('user_id');
+    final response = await http.delete(
+      Uri.parse('http://192.168.214.65:5000/hapus_penilaian/$userId'),
+    );
+    if (response.statusCode == 200) {
+      fetchData(); // Fetch the data again after deleting
+    } else {
+      print('Failed to delete data');
+    }
+  }
+
+  void navigateToPerbandinganPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NilaiPerbandinganPage(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Data Penilaian'),
+      ),
+      body: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          final item = data[index];
+          if (index == 0 || item['id_alternatif'] != data[index - 1]['id_alternatif']) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  title: Text('Alternatif: ${item['id_alternatif']}'),
+                  subtitle: Text('Kriteria dan Nilai:'),
+                ),
+                buildDataTable(item),
+                Divider(),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              if (isDataExist()) {
+                showConfirmationDialog(context);
+              } else {
+                navigateToPerbandinganPage(context);
+              }
+            },
+            child: Icon(Icons.add),
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () {
+              fetchData(); // Reload the data
+            },
+            child: Icon(Icons.refresh),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDataTable(Map<String, dynamic> item) {
+    return DataTable(
+      columns: [
+        DataColumn(label: Text('Kode')),
+        DataColumn(label: Text('Nilai')),
+        DataColumn(label: Text('Action')),
+      ],
+      rows: kriteriaList.map((kriteria) {
+        return DataRow(
+          cells: [
+            DataCell(Center(child: Text('K$kriteria'))),
+            DataCell(Center(child: Text(getValueByKriteria(item['id_alternatif'], kriteria)))),
+            DataCell(IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                // Pass the penilaian ID and kriteria to editValue method
+                editValue(item['id_alternatif'], kriteria, item['id']); // Assuming 'id' is the penilaianId
+              },
+            )),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  String getValueByKriteria(String alternatif, String kriteria) {
+    for (var item in data) {
+      if (item['id_alternatif'] == alternatif && item['id_kriteria'] == kriteria) {
+        return item['nilai'].toString();
+      }
+    }
+    return '-';
+  }
+
+  void editValue(String alternatif, String kriteria, int penilaianId) {
+    // Convert penilaianId to String before passing it to the dialog
+    String penilaianIdStr = penilaianId.toString();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Value'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Edit the value for K$kriteria:'),
+            DropdownButton<KriteriaData>(
+              value: selectedValue,
+              items: kriteriaValueList.map((KriteriaData kriteriaData) {
+                return DropdownMenuItem<KriteriaData>(
+                  value: kriteriaData,
+                  child: Text(kriteriaData.text),
+                );
+              }).toList(),
+              onChanged: (KriteriaData? newValue) {
+                setState(() {
+                  selectedValue = newValue;
+                });
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (selectedValue != null) {
+                // Pass the penilaian ID, kriteria, and selected value to updateValueInApi method
+                updateValueInApi(penilaianIdStr, kriteria, selectedValue!.value);
+              }
+              Navigator.of(context).pop();
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> updateValueInApi(String penilaianId, String kriteria, double newValue) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('user_id');
+    
+    final response = await http.put(
+      Uri.parse('http://192.168.214.65:5000/penilaian/$penilaianId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'alternatif': penilaianId,
+        'kriteria': kriteria,
+        'nilai': newValue,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print('Value updated successfully');
+      fetchData(); // Fetch the data again after updating
+    } else {
+      print('Failed to update value');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to update value. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+}
+
+class KriteriaData {
+  final double value;
+  final String text;
+
+  KriteriaData({required this.value, required this.text});
+}
+

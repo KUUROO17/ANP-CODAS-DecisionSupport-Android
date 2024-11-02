@@ -1,0 +1,222 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'add_data_alternatif_page.dart';
+import 'edit_data_alternatif_page.dart';
+
+class Alternatif {
+  final String kode;
+  final String nama;
+  final String alamat;
+
+  Alternatif({
+    required this.kode,
+    required this.nama,
+    required this.alamat,
+  });
+
+  factory Alternatif.fromJson(Map<String, dynamic> json) {
+    return Alternatif(
+      kode: json['kode'],
+      nama: json['nama'],
+      alamat: json['alamat'],
+    );
+  }
+}
+
+Future<List<Alternatif>> fetchAlternatif() async {
+  final response =
+      await http.get(Uri.parse('http://192.168.245.65:5000/data-alternatif'));
+
+  if (response.statusCode == 200) {
+    List<dynamic> data = jsonDecode(response.body)['data'];
+    List<Alternatif> alternatifs =
+        data.map((json) => Alternatif.fromJson(json)).toList();
+    return alternatifs;
+  } else {
+    throw Exception('Failed to load alternatifs');
+  }
+}
+
+class AlternatifHomePage extends StatefulWidget {
+  const AlternatifHomePage({Key? key}) : super(key: key);
+
+  @override
+  _AlternatifHomePageState createState() => _AlternatifHomePageState();
+}
+
+class _AlternatifHomePageState extends State<AlternatifHomePage> {
+  late List<Alternatif> alternatifs = [];
+  late Future<List<Alternatif>> futureAlternatifs;
+
+  @override
+  void initState() {
+    super.initState();
+    futureAlternatifs = fetchAlternatif();
+    // Mengisi variabel alternatifs dengan data yang diperoleh dari futureAlternatifs
+    futureAlternatifs.then((value) {
+      setState(() {
+        alternatifs = value;
+      });
+    });
+  }
+
+  void _editData(Alternatif alternatif) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditDataAlternatifPage(alternatif: alternatif),
+      ),
+    );
+
+    if (result != null) {
+      // Jika result tidak null, artinya ada data yang diubah
+      setState(() {
+        // Perbarui tampilan dengan mengganti data yang diubah
+        int index = alternatifs.indexWhere((element) => element.kode == result.kode);
+        if (index != -1) {
+          alternatifs[index] = result;
+        }
+      });
+    }
+  }
+
+  void _deleteData(Alternatif alternatif) {
+    _confirmDelete(alternatif);
+  }
+
+  Future<void> _confirmDelete(Alternatif alternatif) async {
+    // Implementasi kode untuk konfirmasi penghapusan seperti sebelumnya
+  }
+
+  Future<void> _deleteDataConfirmed(Alternatif alternatif) async {
+    // Implementasi kode untuk menghapus data seperti sebelumnya
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Data Alternatif'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'DATA ALTERNATIF :',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<Alternatif>>(
+              future: futureAlternatifs,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical, // Ubah menjadi vertical
+                    child: DataTable(
+                      columnSpacing: 16.0,
+                      // Hapus horizontalMargin karena sudah tidak diperlukan
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.black), // Garis di sekitar tabel
+                      ),
+                      columns: const <DataColumn>[
+                        DataColumn(label: Text('Kode')),
+                        DataColumn(label: Text('Nama')),
+                        DataColumn(label: Text('Alamat')),
+                        DataColumn(label: Text('Action')),
+                      ],
+                      rows: alternatifs.map((alternatif) {
+                        // Warna untuk baris data bergantian
+                        bool isEven = alternatifs.indexOf(alternatif) % 2 == 0;
+                        Color rowColor = isEven ? Colors.grey[300]! : Colors.white;
+
+                        return DataRow(
+                          color: MaterialStateColor.resolveWith((states) => rowColor),
+                          cells: <DataCell>[
+                            DataCell(Text(alternatif.kode)),
+                            DataCell(Text(alternatif.nama)),
+                            DataCell(Text(alternatif.alamat)),
+                            DataCell(Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      _editData(alternatif);
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      _deleteData(alternatif);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }
+
+                // Jika tidak ada data yang diperoleh dari future, tampilkan teks kosong
+                return Text('Tidak ada data');
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddDataAlternatifPage()),
+              );
+
+              if (result != null) {
+                // Jika result tidak null, artinya ada data yang ditambahkan
+                setState(() {
+                  // Perbarui tampilan dengan menambahkan data baru
+                  alternatifs.add(result);
+                });
+              }
+            },
+            child: Icon(Icons.add),
+          ),
+          SizedBox(height: 16.0),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                futureAlternatifs = fetchAlternatif();
+                // Mengisi variabel alternatifs dengan data yang diperoleh dari futureAlternatifs
+                futureAlternatifs.then((value) {
+                  setState(() {
+                    alternatifs = value;
+                  });
+                });
+              });
+            },
+            child: Icon(Icons.refresh),
+          ),
+        ],
+      ),
+    );
+  }
+}

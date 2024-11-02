@@ -1,0 +1,251 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'add_data_page.dart';
+import 'edit_data_page.dart';
+
+class Album {
+  final String kode;
+  final String nama;
+  final String status;
+
+  Album({
+    required this.kode,
+    required this.nama,
+    required this.status,
+  });
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      kode: json['kode'],
+      nama: json['nama'],
+      status: json['status'],
+    );
+  }
+}
+
+Future<List<Album>> fetchAlbums() async {
+  final response =
+      await http.get(Uri.parse('http://192.168.245.65:5000/data-kriteria'));
+
+  if (response.statusCode == 200) {
+    List<dynamic> data = jsonDecode(response.body)['data'];
+    List<Album> albums = data.map((json) => Album.fromJson(json)).toList();
+    return albums;
+  } else {
+    throw Exception('Failed to load albums');
+  }
+}
+
+class KriteriaHomePage extends StatefulWidget {
+  const KriteriaHomePage({Key? key}) : super(key: key);
+
+  @override
+  _KriteriaHomePageState createState() => _KriteriaHomePageState();
+}
+
+class _KriteriaHomePageState extends State<KriteriaHomePage> {
+  late Future<List<Album>> futureAlbums;
+
+  @override 
+  void initState() {
+    super.initState();
+    futureAlbums = fetchAlbums();
+  }
+
+  void _editData(Album album) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditDataPage(album: album)),
+    ).then((value) {
+      // Aksi yang diambil setelah kembali dari EditDataPage
+      if (value == true) {
+        // Jika berhasil mengedit data, reload data
+        _reloadData();
+      }
+    });
+  }
+
+  void _deleteData(Album album) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Konfirmasi Hapus'),
+          content: Text('Apakah Anda ingin menghapus data ini?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _deleteDataConfirmed(album); // Hapus data
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: Text('Oke'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteDataConfirmed(Album album) async {
+    String url = 'http://192.168.245.65:5000/data-kriteria/${album.kode}';
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final response = await http.delete(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        // Data berhasil dihapus dari database
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Data berhasil dihapus'),
+          ),
+        );
+        setState(() {
+          // Perbarui tampilan dengan menghapus data dari futureAlbums
+          futureAlbums = fetchAlbums();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal menghapus data'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Terjadi kesalahan'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _reloadData() async {
+    setState(() {
+      futureAlbums = fetchAlbums();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Data Kriteria'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'DATA KRITERIA :',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<Album>>(
+              future: futureAlbums,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columnSpacing: 16.0,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.black), // Garis di sekitar tabel
+                      ),
+                      columns: const <DataColumn>[
+                        DataColumn(label: Text('Kode')),
+                        DataColumn(label: Text('Nama Kriteria')),
+                        DataColumn(label: Text('Status')),
+                        DataColumn(label: Text('Action')),
+                      ],
+                      rows: snapshot.data!.map((album) {
+                        bool isEven = snapshot.data!.indexOf(album) % 2 == 0;
+                        Color rowColor =
+                            isEven ? Colors.grey[300]! : Colors.white;
+
+                        return DataRow(
+                          color: MaterialStateColor.resolveWith(
+                              (states) => rowColor),
+                          cells: <DataCell>[
+                            DataCell(Text(album.kode)),
+                            DataCell(Text(album.nama)),
+                            DataCell(Text(album.status)),
+                            DataCell(Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      _editData(album);
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      _deleteData(album);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddDataPage()),
+              ).then((value) {
+                // Aksi yang diambil setelah kembali dari AddDataPage
+                if (value == true) {
+                  // Jika berhasil menambah data, reload data
+                  _reloadData();
+                }
+              });
+            },
+            child: Icon(Icons.add),
+          ),
+          SizedBox(height: 16.0),
+          FloatingActionButton(
+            onPressed: _reloadData,
+            child: Icon(Icons.refresh),
+          ),
+        ],
+      ),
+    );
+  }
+}
