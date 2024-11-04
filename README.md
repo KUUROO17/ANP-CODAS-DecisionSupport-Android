@@ -106,10 +106,44 @@ This ERD articulates a structured system designed to systematically evaluate alt
 ---
 
 ### 📱 Application Interface
-This section showcases screenshots and brief descriptions of the app's main screens, including:
-  - 🗺️ Location Selection: Choose and prioritize locations based on criteria.
-  - 📈 Multi-Criteria Analysis: Calculate and rank locations.
-  - 📊 Results Visualization: Easily view and interpret analysis outcomes.
+
+This section highlights the pivotal screens of the application, providing a detailed look into both the Admin and User interfaces through engaging descriptions and screenshots. 
+
+---
+
+#### 🔐 Admin Interface
+
+The **Admin Interface** is a pivotal component of the application, designed to equip administrators with the necessary tools to efficiently manage system functionalities and optimize decision-making processes. This section features two critical screens:
+
+- 🔑 **Admin Login:**  
+  The entry point for administrators, this secure login screen ensures that only authorized personnel can access the management features of the application. It lays the groundwork for maintaining system integrity and data confidentiality.  
+  ![image](https://github.com/user-attachments/assets/ae40c20d-a075-4958-a280-2237daa8224b)
+
+
+- 📝 **Criteria Management & Evaluation:**  
+  This dynamic screen enables administrators to effortlessly add new criteria and assess existing ones. Administrators can input comparative values assigned to each criterion, derived from expert evaluations and interviews, ensuring the criteria reflect informed insights. The application utilizes the Analytic Network Process (ANP) method to compute the results, displaying the rankings and analyses clearly, thus facilitating strategic decision-making.  
+  ![image](https://github.com/user-attachments/assets/9964356f-1981-4563-948d-21c7290dc0a8)
+
+
+With its user-friendly design and powerful functionalities, the Admin Interface not only streamlines the management of criteria but also enhances the overall effectiveness of the decision support system.
+
+---
+
+#### 🧑‍🤝‍🧑 User Interface
+The User Interface is tailored to ensure a smooth and intuitive experience for all users engaging with the system. Key features include:
+
+- **Location Selection:**  
+  Users can easily choose and prioritize locations based on specified criteria, facilitating informed choices that align with their needs.
+
+- **Multi-Criteria Analysis:**  
+  This feature allows users to calculate and rank the selected locations, ensuring a comprehensive evaluation based on relevant factors.
+
+- **Results Visualization:**  
+  Users can effortlessly view and interpret the analysis outcomes, with visual representations that make complex data more understandable.
+
+---
+
+Through these thoughtfully designed interfaces, the application fosters efficient management and user engagement, enhancing the overall decision-making experience.
 
 ---
 
