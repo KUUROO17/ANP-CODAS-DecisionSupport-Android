@@ -142,9 +142,7 @@ The **User Interface** is designed to provide a seamless and engaging experience
     
   ![image](https://github.com/user-attachments/assets/9dd49f94-3430-4d13-83af-69a8b78dc915)
 
-- **Alternative Calcul
-
-ations & Results 📊:**  
+- **Alternative Calculations & Results 📊:**  
   Users can efficiently analyze alternatives based on established criteria and view results in a visually appealing format. This functionality is crucial for ensuring informed decision-making, as users can quickly assess which alternatives align best with their criteria. The clarity of the displayed results fosters confidence in the decision-making process.
 
   ![image](https://github.com/user-attachments/assets/bbc605b3-dab6-498a-b312-a6a7f60fd2f7)
