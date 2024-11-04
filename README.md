@@ -17,8 +17,21 @@ This repository includes all resources and code needed for the ANP-CODAS Locatio
 
 ## 📂 Documentation & Diagrams
 
-### 📐 Data Flow Diagram (DFD)
-The **Data Flow Diagram** (DFD) outlines how information flows within the app, from initial user actions to processing and results. This helps visualize each stage of data movement for clearer understanding.
+### 📐 **Data Flow Diagram (DFD)**
+
+A **Data Flow Diagram (DFD)** visually represents how data moves through a system. It maps out the flow from input, processing, storage, and output, helping users understand the system’s structure and interactions.
+
+Below, the DFD provides an overview of this application’s data flow, showcasing how user actions lead to data processing and final outputs within the app.
+
+![dfd level 1-dfd 1refisi drawio](https://github.com/user-attachments/assets/869f131b-f3e1-476f-82f1-06ae2db5d5c5)
+
+
+**Description:**  
+This DFD illustrates each step of the app's data movement. Starting from user input, it details how data is processed across different system modules and eventually reaches the end-user as a result. This structured flow allows for efficient and organized handling of data within the application.
+
+--- 
+
+This layout gives a clear and professional introduction, making it both informative and visually appealing.
 
 ### 📋 Entity-Relationship Diagram (ERD)
 Our **Entity-Relationship Diagram** (ERD) details the database structure, showing how each data entity connects and interacts, which is essential for storing and accessing location data efficiently.
