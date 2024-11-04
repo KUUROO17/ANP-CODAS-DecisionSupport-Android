@@ -25,45 +25,49 @@ Below, the DFD provides an overview of this application’s data flow, showcasin
 
 ![2 drawio](https://github.com/user-attachments/assets/f75b4c69-460e-42e6-9b35-cec395d373fe)
 
-🌐 Data Flow Diagram (DFD) Overview
-The Data Flow Diagram (DFD) provides a visual representation of the movement of data within the system, illustrating the interactions between users, processes, and data storage. This diagram is essential for understanding the functionalities of a Decision Support System (DSS) that operates based on specific criteria.
+### 🌐 Data Flow Diagram (DFD) Overview
 
-User Registration: New users can join the system by entering their personal information, creating a unique identity within the platform.
+The **Data Flow Diagram** (DFD) provides a visual representation of the movement of data within the system, illustrating the interactions between users, processes, and data storage. This diagram is essential for understanding the functionalities of a Decision Support System (DSS) that operates based on specific criteria.
 
-Login Functionality: Registered users, including administrators, can securely access the system by providing their credentials, ensuring safe entry into the application.
+- **User Registration:** New users can join the system by entering their personal information, creating a unique identity within the platform.
 
-Criteria Management: Administrators have the ability to add, modify, or remove criteria that are essential for evaluations, which play a crucial role in decision-making.
+- **Login Functionality:** Registered users, including administrators, can securely access the system by providing their credentials, ensuring safe entry into the application.
 
-Criteria Calculation: The system processes established criteria values to compute scores, laying the groundwork for further evaluations.
+- **Criteria Management:** Administrators have the ability to add, modify, or remove criteria that are essential for evaluations, which play a crucial role in decision-making.
 
-Adding Alternatives: Users and administrators can input various options or alternatives for assessment, each representing a potential choice in the decision-making process.
+- **Criteria Calculation:** The system processes established criteria values to compute scores, laying the groundwork for further evaluations.
 
-Alternative Assessment: The system evaluates each alternative based on the calculated criteria, producing insights into which options align best with the defined standards.
+- **Adding Alternatives:** Users and administrators can input various options or alternatives for assessment, each representing a potential choice in the decision-making process.
 
-User Data Storage: The system efficiently manages user data, including activity logs and evaluation results, ensuring a comprehensive record of interactions.
+- **Alternative Assessment:** The system evaluates each alternative based on the calculated criteria, producing insights into which options align best with the defined standards.
 
-📊 Entities Involved
-User: Represents individuals utilizing the system. Each user entity encompasses attributes such as id, username, name, password, and role, defining their access and permissions within the application.
+- **User Data Storage:** The system efficiently manages user data, including activity logs and evaluation results, ensuring a comprehensive record of interactions.
 
-Admin: A user with elevated permissions, responsible for managing the system and overseeing operations.
+### 📊 Entities Involved
 
-Criteria: Factors taken into account during evaluations, guiding the decision-making process, with attributes including id, code, name, and status.
+- **User:** Represents individuals utilizing the system. Each user entity encompasses attributes such as `id`, `username`, `name`, `password`, and `role`, defining their access and permissions within the application.
 
-Alternatives: Various options available for assessment based on established criteria, which may include attributes like id, code, name, and address.
+- **Admin:** A user with elevated permissions, responsible for managing the system and overseeing operations.
 
-Criterion Values: Numerical values assigned to each criterion, representing their significance in the evaluation process.
+- **Criteria:** Factors taken into account during evaluations, guiding the decision-making process, with attributes including `id`, `code`, `name`, and `status`.
 
-Weight Values: Results derived from computed criterion values, indicating the impact of each criterion on the overall assessment.
+- **Alternatives:** Various options available for assessment based on established criteria, which may include attributes like `id`, `code`, `name`, and `address`.
 
-Outcome: The final assessment results that highlight the most suitable alternatives based on user-defined criteria.
+- **Criterion Values:** Numerical values assigned to each criterion, representing their significance in the evaluation process.
 
-🔄 Data Flow Insights
+- **Weight Values:** Results derived from computed criterion values, indicating the impact of each criterion on the overall assessment.
+
+- **Outcome:** The final assessment results that highlight the most suitable alternatives based on user-defined criteria.
+
+### 🔄 Data Flow Insights
+
 The DFD showcases the dynamic interactions between entities and processes, illustrating how data transitions from one stage to another. For instance, user information flows from the registration phase to user data storage, while criterion values move from the criteria management process to the calculation phase.
 
-📈 Conclusion
+### 📈 Conclusion
+
 This DFD encapsulates the complex yet streamlined operations of a Decision Support System, emphasizing its role in facilitating informed decision-making through objective assessments. By providing a structured overview of how information circulates, the DFD enhances comprehension for both developers and users, paving the way for potential improvements and adaptations in the system.
 
-Description:
+**Description:**  
 This DFD illustrates each step of the app's data movement. Starting from user input, it details how data is processed across different system modules and eventually reaches the end user as a result. This structured flow allows for efficient and organized handling of data within the application.
 
 --- 
