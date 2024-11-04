@@ -34,8 +34,9 @@ Below, the DFD provides an overview of this application’s data flow, showcasin
 
 The **Data Flow Diagram** (DFD) provides a visual representation of the movement of data within the system, illustrating the interactions between users, processes, and data storage. This diagram is essential for understanding the functionalities of a Decision Support System (DSS) that operates based on specific criteria.
 
+#### Key Processes:
 - **User Registration:** New users can join the system by entering their personal information, creating a unique identity within the platform.
-
+  
 - **Login Functionality:** Registered users, including administrators, can securely access the system by providing their credentials, ensuring safe entry into the application.
 
 - **Criteria Management:** Administrators have the ability to add, modify, or remove criteria that are essential for evaluations, which play a crucial role in decision-making.
@@ -78,11 +79,12 @@ This DFD illustrates each step of the app's data movement. Starting from user in
 --- 
 
 ### 📋 Entity-Relationship Diagram (ERD)
+
 Our Entity-Relationship Diagram (ERD) illustrates the database structure, showcasing the connections and interactions between various data entities. This diagram is essential for understanding how location data is organized, ensuring efficient storage and access throughout the system.
 
 ![ERD-sidang drawio](https://github.com/user-attachments/assets/9cf41f94-1456-4908-99b4-9e7e94bd1a49)
 
-**Entities Overview:**
+#### Entities Overview:
 
 - **User:** Represents individuals utilizing the system. Each user entity encompasses attributes such as `id`, `username`, `name`, `password`, and `role`, defining their access and permissions within the application.
 
@@ -94,7 +96,7 @@ Our Entity-Relationship Diagram (ERD) illustrates the database structure, showca
 
 - **Results:** Represents the final outcomes derived from evaluations, incorporating attributes like `id`, `user_id`, `alternative_id`, and computed score, providing a succinct summary of assessment performance.
 
-**Relationships:**
+#### Relationships:
 
 - **User to Criteria:** A single user may define multiple criteria, establishing a one-to-many relationship, which enhances flexibility in evaluation.
 
@@ -104,7 +106,7 @@ Our Entity-Relationship Diagram (ERD) illustrates the database structure, showca
 
 - **Alternatives to Results:** Each alternative can yield multiple evaluation results, linking back to user assessments and facilitating a detailed performance overview.
 
-**Interpretation:**
+### **Interpretation:**
 
 This ERD articulates a structured system designed to systematically evaluate alternatives based on predefined criteria. Users can specify relevant standards, score each alternative, and derive comprehensive results that reflect the weighted significance of these criteria. The meticulous organization encapsulated in this diagram not only streamlines the decision-making process but also bolsters the system's clarity, efficiency, and adaptability.
 
@@ -123,12 +125,10 @@ The **Admin Interface** is a pivotal component of the application, designed to e
   
   ![image](https://github.com/user-attachments/assets/ae40c20d-a075-4958-a280-2237daa8224b)
 
-
 - 📝 **Criteria Management & Evaluation:**  
   This dynamic screen enables administrators to effortlessly add new criteria and assess existing ones. Administrators can input comparative values assigned to each criterion, derived from expert evaluations and interviews, ensuring the criteria reflect informed insights. The application utilizes the Analytic Network Process (ANP) method to compute the results, displaying the rankings and analyses clearly, thus facilitating strategic decision-making.
   
   ![image](https://github.com/user-attachments/assets/9964356f-1981-4563-948d-21c7290dc0a8)
-
 
 With its user-friendly design and powerful functionalities, the Admin Interface not only streamlines the management of criteria but also enhances the overall effectiveness of the decision support system.
 
@@ -142,20 +142,34 @@ The **User Interface** is designed to provide a seamless and engaging experience
     
   ![image](https://github.com/user-attachments/assets/9dd49f94-3430-4d13-83af-69a8b78dc915)
 
+- **Alternative Calcul
 
-- **Alternative Calculations & Rankings 📊:** This page showcases detailed calculations for each alternative, presenting the results clearly and effectively. Users can easily access the rankings, allowing for quick insights into the best choices available. The clean design and straightforward presentation make the evaluation process both efficient and user-friendly.
-   
-  ![image](https://github.com/user-attachments/assets/11199cb5-c3df-45aa-af7c-d16d2ccd1ce8)
+ations & Results 📊:**  
+  Users can efficiently analyze alternatives based on established criteria and view results in a visually appealing format. This functionality is crucial for ensuring informed decision-making, as users can quickly assess which alternatives align best with their criteria. The clarity of the displayed results fosters confidence in the decision-making process.
 
-This user-centric interface not only facilitates effective alternative management but also enhances the decision-making journey, combining professionalism with an engaging experience.
+  ![image](https://github.com/user-attachments/assets/93d1fd7b-5a7e-4202-9857-e5694283f160)
+
+By emphasizing user experience and accessibility, the User Interface promotes engagement and effectiveness in managing alternatives, ultimately enhancing the overall functionality of the ANP-CODAS LocationApp.
+
 ---
 
-### 🎉🎊 Conclusion 🎊🎉
+## 🚀 Getting Started
 
-In conclusion, this project beautifully merges the principles of decision analysis with the dynamic world of Android application development! 🚀✨ The application is designed to empower both administrators and users, providing them with a seamless experience in managing alternatives and conducting thorough evaluations based on carefully defined criteria. 
+To start using the ANP-CODAS LocationApp, follow these simple steps:
 
-With its vibrant interface and robust features, navigating through user registration, criteria management, and alternative assessment becomes a breeze! 🌟 Users can effortlessly engage in a comprehensive decision-making journey that is both effective and enjoyable. 
+1. **Clone this repository:**
+   ```bash
+   git clone https://github.com/your-username/ANP-CODAS-LocationApp-Android.git
+   ```
+2. **Open the project in Android Studio.**
+3. **Build and run the application on your preferred device.**
 
-We invite you to dive into this repository, explore its functionalities, contribute your insights, or ask any questions you may have! 💬🤗 This is not just a project; it's a collaborative resource for anyone passionate about blending decision analysis with innovative Android application development. 
+---
 
-Happy coding, and let the adventure begin! 🎉🚀💻
+## 📄 Conclusion
+
+Thank you for exploring the ANP-CODAS LocationApp! We hope you find it beneficial for your decision-making processes. For any questions or contributions, feel free to reach out or submit a pull request!
+
+---
+
+Feel free to adjust any sections as you see fit or let me know if there are additional changes you'd like!
