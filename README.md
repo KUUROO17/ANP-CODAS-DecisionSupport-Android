@@ -26,39 +26,45 @@ Below, the DFD provides an overview of this application’s data flow, showcasin
 ![2 drawio](https://github.com/user-attachments/assets/f75b4c69-460e-42e6-9b35-cec395d373fe)
 
 🌐 Data Flow Diagram (DFD) Overview
-The Data Flow Diagram (DFD) serves as a visual representation of how data flows through the system, illustrating the interactions between users, processes, and data storage. This diagram is vital for understanding the functionalities of a Decision Support System (DSS) that operates based on specific criteria.
+The Data Flow Diagram (DFD) provides a visual representation of the movement of data within the system, illustrating the interactions between users, processes, and data storage. This diagram is essential for understanding the functionalities of a Decision Support System (DSS) that operates based on specific criteria.
 
-🔑 Key Processes Explained
 User Registration: New users can join the system by entering their personal information, creating a unique identity within the platform.
 
-Login Functionality: Registered users, including administrators, can access the system by providing their credentials, ensuring secure entry into the application.
+Login Functionality: Registered users, including administrators, can securely access the system by providing their credentials, ensuring safe entry into the application.
 
-Criteria Management: Administrators have the ability to add, modify, or remove criteria essential for evaluations, which play a crucial role in decision-making.
+Criteria Management: Administrators have the ability to add, modify, or remove criteria that are essential for evaluations, which play a crucial role in decision-making.
 
-Criteria Calculation: The system processes the established criteria values to compute scores, laying the groundwork for further evaluations.
+Criteria Calculation: The system processes established criteria values to compute scores, laying the groundwork for further evaluations.
 
-Adding Alternatives: Users and admins can input various options or alternatives to be assessed, each representing a potential choice in the decision-making process.
+Adding Alternatives: Users and administrators can input various options or alternatives for assessment, each representing a potential choice in the decision-making process.
 
 Alternative Assessment: The system evaluates each alternative based on the calculated criteria, producing insights into which options align best with the defined standards.
 
 User Data Storage: The system efficiently manages user data, including activity logs and evaluation results, ensuring a comprehensive record of interactions.
 
 📊 Entities Involved
-User: Individuals interacting with the system, utilizing its features for their needs.
-Admin: Users with elevated permissions, responsible for system management and oversight.
-Criteria: Factors taken into account during evaluations, guiding the decision-making process.
-Alternatives: The various options available for assessment based on the established criteria.
-Criterion Values: Numerical values assigned to each criterion, representing their significance.
-Weight Values: Results derived from the computed criterion values, indicating their impact.
-Outcome: The final assessment results, highlighting the most suitable alternatives.
+User: Represents individuals utilizing the system. Each user entity encompasses attributes such as id, username, name, password, and role, defining their access and permissions within the application.
+
+Admin: A user with elevated permissions, responsible for managing the system and overseeing operations.
+
+Criteria: Factors taken into account during evaluations, guiding the decision-making process, with attributes including id, code, name, and status.
+
+Alternatives: Various options available for assessment based on established criteria, which may include attributes like id, code, name, and address.
+
+Criterion Values: Numerical values assigned to each criterion, representing their significance in the evaluation process.
+
+Weight Values: Results derived from computed criterion values, indicating the impact of each criterion on the overall assessment.
+
+Outcome: The final assessment results that highlight the most suitable alternatives based on user-defined criteria.
+
 🔄 Data Flow Insights
 The DFD showcases the dynamic interactions between entities and processes, illustrating how data transitions from one stage to another. For instance, user information flows from the registration phase to user data storage, while criterion values move from the criteria management process to the calculation phase.
 
 📈 Conclusion
 This DFD encapsulates the complex yet streamlined operations of a Decision Support System, emphasizing its role in facilitating informed decision-making through objective assessments. By providing a structured overview of how information circulates, the DFD enhances comprehension for both developers and users, paving the way for potential improvements and adaptations in the system.
 
-**Description:**  
-This DFD illustrates each step of the app's data movement. Starting from user input, it details how data is processed across different system modules and eventually reaches the end-user as a result. This structured flow allows for efficient and organized handling of data within the application.
+Description:
+This DFD illustrates each step of the app's data movement. Starting from user input, it details how data is processed across different system modules and eventually reaches the end user as a result. This structured flow allows for efficient and organized handling of data within the application.
 
 --- 
 
